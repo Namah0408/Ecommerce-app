@@ -8,6 +8,6 @@ router.use(authMiddleware); // Protect all cart routes
 
 router.post("/add", addToCart);
 router.get("/", getCart);
-router.post("/remove", removeFromCart);
+router.delete("/:productId", removeFromCart);
 
 export default router;

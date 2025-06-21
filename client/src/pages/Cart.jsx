@@ -69,7 +69,7 @@ function Cart() {
                 </div>
                 <button
                   onClick={() => handleRemove(item.productId._id)}
-                  className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
+                  className="bg-red-500 hover:bg-red-600 cursor-pointer px-4 py-2 rounded"
                 >
                   Remove
                 </button>

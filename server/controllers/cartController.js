@@ -34,17 +34,25 @@ export const getCart = async (req, res) => {
 };
 
 export const removeFromCart = async (req, res) => {
-  const { productId } = req.body;
-
   try {
-    const cart = await Cart.findOne({ userId: req.user.id });
-    if (!cart) return res.status(404).json({ message: "Cart not found" });
+    const userId = req.user.id;
+    const productId = req.params.productId;
 
-    cart.items = cart.items.filter(item => item.productId.toString() !== productId);
+    const cart = await Cart.findOne({ userId });
+
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    cart.items = cart.items.filter(
+      (item) => item.productId.toString() !== productId
+    );
+
     await cart.save();
 
-    res.json(cart);
+    res.json({ message: "Item removed from cart", cart });
   } catch (err) {
-    res.status(500).json({ message: "Error removing item", error: err.message });
+    console.error("❌ Error in removeFromCart:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };

@@ -182,11 +182,11 @@ function AdminProducts() {
           accept="image/*"
           onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
           required
-          className="w-full p-2 mb-4 rounded bg-gray-700 text-white"
+          className="w-full p-2 mb-4 rounded bg-gray-700 text-white hover:cursor-pointer"
         />
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded w-full"
+          className="bg-blue-500 hover:bg-blue-600 cursor-pointer px-4 py-2 rounded w-full"
         >
           {isEditing ? "Update Product" : "Add Product"}
         </button>
