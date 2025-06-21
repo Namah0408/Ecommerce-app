@@ -19,7 +19,7 @@ router.get("/", getUserOrders);
 router.get("/:id", getOrderById);
 
 // Admin routes
-router.get("/admin/all", adminMiddleware, getAllOrders);
-router.put("/admin/status/:id", adminMiddleware, updateOrderStatus);
+router.get("/admin/all",authMiddleware, adminMiddleware, getAllOrders);
+router.put("/admin/status/:id",authMiddleware, adminMiddleware, updateOrderStatus);
 
 export default router;

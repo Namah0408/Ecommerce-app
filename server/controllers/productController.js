@@ -3,20 +3,29 @@ import Product from "../models/Product.js";
 // @desc    Create a new product (Admin only)
 export const createProduct = async (req, res) => {
   try {
-    const { title, description, price, stock } = req.body;
+    const { title, price, description, stock } = req.body;
 
-    const newProduct = new Product({
+    if (!req.file) {
+      return res.status(400).json({ message: "Image is required" });
+    }
+
+    const imageUrl = req.file.path || "https://via.placeholder.com/150";
+
+    const product = new Product({
       title,
-      description,
       price,
+      description,
       stock,
-      image: req.file.path, // Cloudinary URL
+      image: imageUrl,
     });
 
-    const savedProduct = await newProduct.save();
-    res.status(201).json(savedProduct);
+    await product.save();
+
+    console.log("✅ Product saved:", product);
+    res.status(201).json({ message: "Product created", product });
   } catch (err) {
-    res.status(500).json({ message: "Error creating product", error: err.message });
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error", error: err.message });
   }
 };
 

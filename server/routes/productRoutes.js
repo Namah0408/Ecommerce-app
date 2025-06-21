@@ -4,7 +4,7 @@ import {
   getAllProducts,
   getProductById,
   updateProduct,
-  deleteProduct
+  deleteProduct,
 } from "../controllers/productController.js";
 
 import authMiddleware from "../middlewares/authMiddleware.js";
@@ -18,11 +18,8 @@ router.get("/", getAllProducts);
 router.get("/:id", getProductById);
 
 // Admin-only routes
-router.post("/", authMiddleware, adminMiddleware, createProduct);
+router.post("/", authMiddleware, adminMiddleware, upload.single("image"), createProduct);
 router.put("/:id", authMiddleware, adminMiddleware, updateProduct);
 router.delete("/:id", authMiddleware, adminMiddleware, deleteProduct);
-
-// Only this route needs file upload
-router.post("/", authMiddleware, adminMiddleware, upload.single("image"), createProduct);
 
 export default router;

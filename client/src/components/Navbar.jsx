@@ -22,6 +22,7 @@ function Navbar() {
         {token && <Link to="/cart" className="hover:text-yellow-400">Cart</Link>}
         {token && <Link to="/orders" className="hover:text-yellow-400">My Orders</Link>}
         {isAdmin && <Link to="/admin/orders" className="hover:text-yellow-400">Admin</Link>}
+        {isAdmin && <Link to="/admin/add-product" className="hover:text-yellow-400">Products</Link>}
         {!token && <Link to="/login" className="hover:text-yellow-400">Login</Link>}
         {!token && <Link to="/signup" className="hover:text-yellow-400">Signup</Link>}
         {token && (

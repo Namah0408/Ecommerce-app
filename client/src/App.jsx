@@ -12,7 +12,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import PrivateRoute from "./routes/PrivateRoutes";
 import AdminRoute from "./routes/AdminRoutes";
-import AdminAddProduct from "./pages/AdminProducts";
+import AdminProduct from "./pages/AdminProducts";
 
 
 function App() {
@@ -66,7 +66,7 @@ function App() {
           path="/admin/add-product" 
           element={
             <AdminRoute>
-              <AdminAddProduct />
+              <AdminProduct />
             </AdminRoute>
           } 
         />

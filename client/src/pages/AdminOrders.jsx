@@ -8,7 +8,7 @@ function AdminOrders() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/orders`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/orders/admin/all`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setOrders(res.data);
@@ -32,7 +32,7 @@ function AdminOrders() {
 
     try {
       const res = await axios.put(
-        `${import.meta.env.VITE_API_URL}/admin/orders/${orderId}`,
+        `${import.meta.env.VITE_API_URL}/orders/admin/status/${orderId}`,
         { status: nextStatus },
         {
           headers: { Authorization: `Bearer ${token}` },

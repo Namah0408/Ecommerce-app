@@ -41,28 +41,25 @@ function AdminProducts() {
     setMessage("");
 
     try {
-      if (isEditing) {
-        // Update
-        await axios.put(
-          `${import.meta.env.VITE_API_URL}/products/${form._id}`,
-          form,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setMessage("✅ Product updated successfully!");
-      } else {
-        // Create
-        await axios.post(
-          `${import.meta.env.VITE_API_URL}/products`,
-          form,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setMessage("✅ Product added successfully!");
-      }
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("price", form.price);
+      formData.append("description", form.description);
+      formData.append("stock", form.stock);
+      formData.append("image", form.image); // This should now be a File object
 
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/products`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setMessage("✅ Product added successfully!");
       setForm({
         _id: null,
         title: "",
@@ -71,7 +68,6 @@ function AdminProducts() {
         stock: "",
         image: "",
       });
-      setIsEditing(false);
       fetchProducts();
     } catch (err) {
       console.error("Save failed:", err.message);
@@ -150,11 +146,10 @@ function AdminProducts() {
           className="w-full p-2 mb-3 rounded bg-gray-700 text-white"
         />
         <input
-          type="text"
+          type="file"
           name="image"
-          placeholder="Image URL"
-          value={form.image}
-          onChange={handleChange}
+          accept="image/*"
+          onChange={(e) => setForm({ ...form, image: e.target.files[0] })}
           required
           className="w-full p-2 mb-4 rounded bg-gray-700 text-white"
         />
