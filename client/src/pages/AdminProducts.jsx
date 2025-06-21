@@ -46,20 +46,41 @@ function AdminProducts() {
       formData.append("price", form.price);
       formData.append("description", form.description);
       formData.append("stock", form.stock);
-      formData.append("image", form.image); // This should now be a File object
+      if (form.image) {
+        formData.append("image", form.image);
+      }
 
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/products`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      let res;
 
-      setMessage("✅ Product added successfully!");
+      if (isEditing && form._id) {
+        // Updating an existing product
+        res = await axios.put(
+          `${import.meta.env.VITE_API_URL}/products/${form._id}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setMessage("✅ Product updated successfully!");
+      } else {
+        // Creating a new product
+        res = await axios.post(
+          `${import.meta.env.VITE_API_URL}/products`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setMessage("✅ Product added successfully!");
+      }
+
+      // Reset form and refresh
       setForm({
         _id: null,
         title: "",
@@ -68,6 +89,7 @@ function AdminProducts() {
         stock: "",
         image: "",
       });
+      setIsEditing(false);
       fetchProducts();
     } catch (err) {
       console.error("Save failed:", err.message);
@@ -75,12 +97,21 @@ function AdminProducts() {
     }
   };
 
+
   // Edit product
   const handleEdit = (product) => {
-    setForm(product);
+    setForm({
+      _id: product._id || null,
+      title: product.title || "",
+      price: product.price || "",
+      description: product.description || "",
+      stock: product.stock || "",
+      image: "", // Leave file input blank, we don't re-load images in file inputs
+    });
     setIsEditing(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
 
   // Delete product
   const handleDelete = async (id) => {

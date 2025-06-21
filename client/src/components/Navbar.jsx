@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
+    toast.success("Logout Successful");
   };
 
   return (
@@ -19,8 +21,8 @@ function Navbar() {
 
       <div className="space-x-4">
         <Link to="/" className="hover:text-yellow-400">Home</Link>
-        {token && <Link to="/cart" className="hover:text-yellow-400">Cart</Link>}
-        {token && <Link to="/orders" className="hover:text-yellow-400">My Orders</Link>}
+        {token && !isAdmin && <Link to="/cart" className="hover:text-yellow-400">Cart</Link>}
+        {token && !isAdmin && <Link to="/orders" className="hover:text-yellow-400">My Orders</Link>}
         {isAdmin && <Link to="/admin/orders" className="hover:text-yellow-400">Admin</Link>}
         {isAdmin && <Link to="/admin/add-product" className="hover:text-yellow-400">Products</Link>}
         {!token && <Link to="/login" className="hover:text-yellow-400">Login</Link>}

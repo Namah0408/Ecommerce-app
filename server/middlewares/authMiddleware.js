@@ -13,6 +13,11 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
+    if (!process.env.JWT_SECRET) {
+      console.error("❌ JWT_SECRET is not defined in .env file");
+      return res.status(500).json({ message: "Server configuration error" });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = {
       id: decoded.id,
@@ -20,7 +25,7 @@ const authMiddleware = (req, res, next) => {
     };
     next();
   } catch (err) {
-    console.log("❌ Token invalid");
+    console.error("Message:", err.message);
     res.status(401).json({ message: "Invalid token" });
   }
 };
