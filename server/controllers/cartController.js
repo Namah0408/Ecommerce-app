@@ -26,8 +26,20 @@ export const addToCart = async (req, res) => {
 
 export const getCart = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
-    res.json(cart || { userId: req.user.id, items: [] });
+    let cart = await Cart.findOne({ userId: req.user.id }).populate("items.productId");
+
+    // If no cart found, return empty structure
+    if (!cart) {
+      return res.json({ userId: req.user.id, items: [] });
+    }
+
+    // Filter out any invalid/deleted products
+    cart.items = cart.items.filter((item) => item.productId !== null);
+
+    // Save the cleaned cart
+    await cart.save();
+
+    res.json(cart);
   } catch (err) {
     res.status(500).json({ message: "Error fetching cart", error: err.message });
   }

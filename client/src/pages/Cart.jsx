@@ -16,7 +16,7 @@ function Cart() {
           },
         });
         console.log("Cart response:", res.data);
-        setCartItems(res.data.items);
+        setCartItems(res.data.items || []); // fallback to [] if items missing
       } catch (err) {
         console.error("Failed to load cart:", err.message);
         setCartItems([]);
@@ -27,10 +27,10 @@ function Cart() {
   }, []);
 
   useEffect(() => {
-    const totalAmount = cartItems.reduce(
-      (sum, item) => sum + item.productId.price * item.quantity,
-      0
-    );
+    const totalAmount = cartItems.reduce((sum, item) => {
+      if (!item.productId) return sum;
+      return sum + item.productId.price * item.quantity;
+    }, 0);
     setTotal(totalAmount);
   }, [cartItems]);
 
@@ -41,7 +41,7 @@ function Cart() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setCartItems(cartItems.filter((item) => item.productId._id !== productId));
+      setCartItems(cartItems.filter((item) => item.productId && item.productId._id !== productId));
     } catch (err) {
       console.error("Remove failed:", err.message);
     }
@@ -51,30 +51,32 @@ function Cart() {
     <div className="min-h-screen bg-gray-900 text-white p-6">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
 
-      {cartItems.length === 0 ? (
+      {cartItems.filter((item) => item.productId).length === 0 ? (
         <p className="text-center text-gray-300">Your cart is empty.</p>
       ) : (
         <>
           <div className="space-y-4">
-            {cartItems.map((item) => (
-              <div
-                key={item.productId._id}
-                className="flex items-center justify-between bg-gray-800 p-4 rounded shadow"
-              >
-                <div>
-                  <h2 className="text-xl font-semibold">{item.productId.name}</h2>
-                  <p className="text-gray-400">
-                    ₹{item.productId.price} × {item.quantity}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleRemove(item.productId._id)}
-                  className="bg-red-500 hover:bg-red-600 cursor-pointer px-4 py-2 rounded"
+            {cartItems
+              .filter((item) => item.productId)
+              .map((item) => (
+                <div
+                  key={item.productId._id}
+                  className="flex items-center justify-between bg-gray-800 p-4 rounded shadow"
                 >
-                  Remove
-                </button>
-              </div>
-            ))}
+                  <div>
+                    <h2 className="text-xl font-semibold">{item.productId.name}</h2>
+                    <p className="text-gray-400">
+                      ₹{item.productId.price} × {item.quantity}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleRemove(item.productId._id)}
+                    className="bg-red-500 hover:bg-red-600 cursor-pointer px-4 py-2 rounded"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
           </div>
 
           <div className="mt-6 text-xl font-bold text-right">

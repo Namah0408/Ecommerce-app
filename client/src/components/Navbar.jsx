@@ -16,7 +16,7 @@ function Navbar() {
   return (
     <nav className="bg-gray-800 text-white px-6 py-3 flex justify-between items-center shadow">
       <Link to="/" className="text-2xl font-bold">
-        🛍️ E-Shop
+        🛍️ Namo-Shop
       </Link>
 
       <div className="space-x-4">
@@ -28,7 +28,7 @@ function Navbar() {
         {!token && <Link to="/login" className="hover:text-yellow-400">Login</Link>}
         {!token && <Link to="/signup" className="hover:text-yellow-400">Signup</Link>}
         {token && (
-          <button onClick={handleLogout} className="bg-red-500 px-3 py-1 rounded hover:bg-red-600">
+          <button onClick={handleLogout} className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 cursor-pointer">
             Logout
           </button>
         )}

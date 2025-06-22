@@ -16,7 +16,7 @@ function Checkout() {
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/cart`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setCartItems(res.data);
+        setCartItems(res.data.items);
       } catch (err) {
         console.error("Error fetching cart:", err.message);
       }
